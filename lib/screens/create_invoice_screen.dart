@@ -13,7 +13,6 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
   final customerNameController = TextEditingController();
   final customerAddressController = TextEditingController();
 
-  // Controllers for the item fields
   final itemNameController = TextEditingController();
   final itemQuantityController = TextEditingController();
   final itemPriceController = TextEditingController();
@@ -32,7 +31,6 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
             key: _formKey,
             child: Column(
               children: [
-                // Customer Information
                 TextFormField(
                   controller: customerNameController,
                   decoration: InputDecoration(labelText: 'Customer Name'),
@@ -44,7 +42,6 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   validator: (value) => value == null || value.isEmpty ? 'Enter an address' : null,
                 ),
 
-                // Invoice Date Picker
                 TextButton(
                   onPressed: () async {
                     final pickedDate = await showDatePicker(
@@ -61,8 +58,6 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   },
                   child: Text('Select Date: ${invoiceDate.toLocal()}'),
                 ),
-
-                // Item Information
                 TextField(
                   controller: itemNameController,
                   decoration: InputDecoration(labelText: 'Item Name'),
@@ -78,19 +73,15 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   keyboardType: TextInputType.number,
                 ),
 
-                // Add Item Button
                 ElevatedButton(
                   onPressed: () {
-                    // Check if input fields are valid and not empty
                     if (itemNameController.text.isNotEmpty &&
                         itemQuantityController.text.isNotEmpty &&
                         itemPriceController.text.isNotEmpty) {
 
-                      // Parse the quantity and price fields
                       int quantity = int.tryParse(itemQuantityController.text) ?? 1;
                       double price = double.tryParse(itemPriceController.text) ?? 0.0;
 
-                      // Add the item to the list
                       setState(() {
                         items.add(InvoiceItem(
                           name: itemNameController.text,
@@ -98,7 +89,6 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                           pricePerUnit: price,
                         ));
 
-                        // Clear input fields
                         itemNameController.clear();
                         itemQuantityController.clear();
                         itemPriceController.clear();
@@ -108,7 +98,6 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   child: Text('Add Item'),
                 ),
 
-                // Display the added items
                 if (items.isNotEmpty)
                   ListView.builder(
                     shrinkWrap: true,
@@ -124,7 +113,6 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                     },
                   ),
 
-                // Generate PDF Button
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate() && items.isNotEmpty) {
@@ -135,7 +123,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                         invoiceDate: invoiceDate,
                         items: items,
                       );
-                      PDFService.generatePDF(invoice, 1); // Pass template type
+                      PDFService.generatePDF(invoice, 1);
                       Navigator.pop(context);
                     }
                   },
